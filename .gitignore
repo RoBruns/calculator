@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+.gitignore
+
 # irrelevant folders
 secao_gui_desk/
 secao_modulos/
