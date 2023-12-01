@@ -3,11 +3,14 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-.gitignore
-
-# irrelevant folders
+# Irrelevant folders
+.secao_gui_desk
+.secao_modulos
 secao_gui_desk/
 secao_modulos/
+
+#gitignore
+.gitignore
 
 # C extensions
 *.so
