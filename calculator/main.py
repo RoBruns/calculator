@@ -1,6 +1,7 @@
 import sys
 import fix_icon_win
 
+from buttons import Button
 from display import Display, Info
 from main_window import MainWindow
 from PySide6.QtWidgets import QApplication
@@ -30,6 +31,10 @@ if __name__ == "__main__":
     display = Display('0')
     window.addToVlayout(display)
 
+    # Botoes
+    button = Button('Texto do botão')
+    window.addToVlayout(button)
+        
     # Executa a aplicação
     window.adjustFixedSize()
     window.show()
