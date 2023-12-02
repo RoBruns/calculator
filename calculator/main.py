@@ -1,13 +1,12 @@
 import sys
-import fix_icon_win
 
+import fix_icon_win
 from buttons import ButtonsGrid
 from display import Display, Info
 from main_window import MainWindow
-from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QApplication
 from variables_and_styles import WINDOW_ICON_PATH, setupTheme
-
 
 # Corrige o icone da janela no Windows
 fix_icon_win.fix_icon_win()
@@ -32,7 +31,7 @@ if __name__ == "__main__":
     window.addWidgetToVlayout(display)
 
     # Grid
-    buttonsGrid = ButtonsGrid()
+    buttonsGrid = ButtonsGrid(display)
     window.vLayout.addLayout(buttonsGrid)
 
     # Executa a aplicação
