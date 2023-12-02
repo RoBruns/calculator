@@ -18,5 +18,5 @@ class MainWindow(QMainWindow):
         self.setFixedSize(self.width(), self.height())
 
     # Adiciona um widget ao layout vertical
-    def addToVlayout(self, widget: QWidget):
+    def addWidgetToVlayout(self, widget: QWidget):
         self.vLayout.addWidget(widget)
