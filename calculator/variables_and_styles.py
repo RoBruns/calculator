@@ -20,31 +20,31 @@ TEXT_MARGIN = 15
 MINIMUN_WIDTH = 450
 
 qss = f"""
-    PushButton[cssClass="specialButton"] {{
-        color: white;
-        background-color: {PRIMARY_COLOR};
+    QPushButton[cssClass="specialButton"] {{
+        color: #fff;
+        background: {PRIMARY_COLOR};
     }}
-    PushButton[cssClass="specialButton"]:hover {{
-        color: white;
-        background-color: {DARKER_PRIMARY_COLOR};
+    QPushButton[cssClass="specialButton"]:hover {{
+        color: #fff;
+        background: {DARKER_PRIMARY_COLOR};
     }}
-    PushButton[cssClass="specialButton"]:pressed {{
-        color: white;
-        background-color: {DARKEST_PRIMARY_COLOR};
+    QPushButton[cssClass="specialButton"]:pressed {{
+        color: #fff;
+        background: {DARKEST_PRIMARY_COLOR};
     }}
 """
 
 
 def setupTheme():
     qdarktheme.setup_theme(
-        theme="dark",
-        corner_shape="rounded",
+        theme='dark',
+        corner_shape='rounded',
         custom_colors={
-            '[dark]': {
-                "primary": "#1e81b0",
+            "[dark]": {
+                "primary": f"{PRIMARY_COLOR}",
             },
             "[light]": {
-                "primary": "#1e81b0",
+                "primary": f"{PRIMARY_COLOR}",
             },
         },
         additional_qss=qss

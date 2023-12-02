@@ -1,7 +1,7 @@
 import sys
 import fix_icon_win
 
-from buttons import Button, ButtonsGrid
+from buttons import ButtonsGrid
 from display import Display, Info
 from main_window import MainWindow
 from PySide6.QtWidgets import QApplication
@@ -35,11 +35,6 @@ if __name__ == "__main__":
     buttonsGrid = ButtonsGrid()
     window.vLayout.addLayout(buttonsGrid)
 
-    buttonsGrid.addWidget(Button('0'), 0, 0)
-    buttonsGrid.addWidget(Button('1'), 0, 1)
-    buttonsGrid.addWidget(Button('2'), 0, 2)
-
-        
     # Executa a aplicação
     window.adjustFixedSize()
     window.show()
