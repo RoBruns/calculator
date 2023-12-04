@@ -1,10 +1,10 @@
 import math
+from typing import TYPE_CHECKING
+
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QGridLayout, QPushButton
 from utils import isNumOrDot, isValidNumber
 from variables_and_styles import MEDIUM_FONT_SIZE
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from display import Display, Info
@@ -84,6 +84,9 @@ class ButtonsGrid(QGridLayout):
                 button, 
                 self._makeSlot(self._operatorClicked, button)
                 )
+        
+        if text == '◀':
+            self._connectButtonClicked(button, self.display.backspace)
             
         if text == '=':
             self._connectButtonClicked(button, self._eq)
