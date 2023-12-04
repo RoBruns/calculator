@@ -27,7 +27,7 @@ if __name__ == "__main__":
     window.addWidgetToVlayout(info)
 
     # Display
-    display = Display('0')
+    display = Display('')
     window.addWidgetToVlayout(display)
 
     # Grid
