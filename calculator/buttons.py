@@ -24,7 +24,7 @@ class Button(QPushButton):
 
 
 class ButtonsGrid(QGridLayout):
-    def __init__(self, display: 'Display', info: 'Info',  app, 
+    def __init__(self, display: 'Display', info: 'Info',  app,
                  window: 'MainWindow', *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -50,7 +50,7 @@ class ButtonsGrid(QGridLayout):
     @property
     def equation(self):
         return self._equation
-    
+
     @equation.setter
     def equation(self, value):
         self._equation = value
@@ -78,19 +78,19 @@ class ButtonsGrid(QGridLayout):
         if text == 'CLOSE':
             button.setProperty('cssClass', 'closeButton')
             button.clicked.connect(app.quit)
-  
+
         if text == 'C':
             self._connectButtonClicked(button, self._clear)
 
         if text in '/*-+^':
             self._connectButtonClicked(
-                button, 
+                button,
                 self._makeSlot(self._operatorClicked, button)
                 )
-        
+
         if text == '◀':
             self._connectButtonClicked(button, self.display.backspace)
-            
+
         if text == '=':
             self._connectButtonClicked(button, self._eq)
 
@@ -135,6 +135,7 @@ class ButtonsGrid(QGridLayout):
         displayText = self.display.text()
 
         if not isValidNumber(displayText):
+            self._showError('Você não digitou o segundo numero')
             return
 
         self._right = float(displayText)
@@ -147,9 +148,9 @@ class ButtonsGrid(QGridLayout):
             else:
                 result = eval(self.equation)
         except ZeroDivisionError:
-            print('ZeroDivisionError')
+            self._showError('Não é possível dividir por zero')
         except OverflowError:
-            print('OverflowError')
+            self._showError('O resultado é muito grande')
 
         self.display.clear()
         self.info.setText(f'{self.equation} = {result}')
@@ -164,4 +165,11 @@ class ButtonsGrid(QGridLayout):
         msgBox.setWindowTitle("Error")
         msgBox.setText(text)
         msgBox.setIcon(msgBox.Icon.Critical)
+        msgBox.exec()
+
+    def _showInnfo(self, text):
+        msgBox = self.window.makeMsgBox()
+        msgBox.setWindowTitle("Info")
+        msgBox.setText(text)
+        msgBox.setIcon(msgBox.Icon.Information)
         msgBox.exec()
