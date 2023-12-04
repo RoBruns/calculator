@@ -27,7 +27,7 @@ class ButtonsGrid(QGridLayout):
 
         self._gridmask = [
             ['C', '◀', '^', '/'],
-            ['7', '8', '9', 'x'],
+            ['7', '8', '9', '*'],
             ['4', '5', '6', '-'],
             ['1', '2', '3', '+'],
             ['CLOSE',  '0', '.', '='],
@@ -36,6 +36,11 @@ class ButtonsGrid(QGridLayout):
         self.info = info
         self.app = app
         self._equation = ''
+        self.equationInitialValue = 'Sua conta'
+        self._left = None
+        self._right = None
+        self._op = None
+        self.equation = self.equationInitialValue
         self._makeGrid()
 
     @property
@@ -71,9 +76,14 @@ class ButtonsGrid(QGridLayout):
             button.clicked.connect(app.quit)
   
         if text == 'C':
-            slot = self._makeSlot(self.display.clear)
-            self._connectButtonClicked(button, slot)
+            self._connectButtonClicked(button, self._clear)
 
+        if text in '/*-+':
+            self._connectButtonClicked(
+                button, 
+                self._makeSlot(self._operatorClicked, button)
+                )
+            
     def _makeSlot(self, func, *args, **kwargs):
         @Slot(bool)
         def realSlot(_):
@@ -88,3 +98,26 @@ class ButtonsGrid(QGridLayout):
             return
 
         self.display.insert(buttonText)
+
+    def _clear(self):
+        self._left = None
+        self._right = None
+        self._op = None
+        self.equation = self.equationInitialValue
+        self.display.clear()
+
+    def _operatorClicked(self, button):
+        buttonText = button.text()
+        displayText = self.display.text()
+        self.display.clear()
+
+        if not isValidNumber(displayText) and self._left is None:
+            return
+        
+        if self._left is None:
+            self._left = float(displayText)
+
+        self._op = buttonText
+        self.equation = f'{self._left} {self._op} ???'
+            
+        
