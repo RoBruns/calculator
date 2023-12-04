@@ -8,6 +8,7 @@ from variables_and_styles import MEDIUM_FONT_SIZE
 
 if TYPE_CHECKING:
     from display import Display, Info
+    from main_window import MainWindow
 
 
 class Button(QPushButton):
@@ -23,7 +24,8 @@ class Button(QPushButton):
 
 
 class ButtonsGrid(QGridLayout):
-    def __init__(self, display: 'Display', info: 'Info', app, *args, **kwargs):
+    def __init__(self, display: 'Display', info: 'Info',  app, 
+                 window: 'MainWindow', *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self._gridmask = [
@@ -35,6 +37,7 @@ class ButtonsGrid(QGridLayout):
         ]
         self.display = display
         self.info = info
+        self.window = window
         self.app = app
         self._equation = ''
         self.equationInitialValue = 'Sua conta'
@@ -119,6 +122,7 @@ class ButtonsGrid(QGridLayout):
         self.display.clear()
 
         if not isValidNumber(displayText) and self._left is None:
+            self._showError('Digite um número antes de usar um operador')
             return
 
         if self._left is None:
@@ -151,6 +155,13 @@ class ButtonsGrid(QGridLayout):
         self.info.setText(f'{self.equation} = {result}')
         self._left = result
         self._right = None
-        
+
         if result == 'error':
             self._left = None
+
+    def _showError(self, text):
+        msgBox = self.window.makeMsgBox()
+        msgBox.setWindowTitle("Error")
+        msgBox.setText(text)
+        msgBox.setIcon(msgBox.Icon.Critical)
+        msgBox.exec()

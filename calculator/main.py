@@ -31,7 +31,7 @@ if __name__ == "__main__":
     window.addWidgetToVlayout(display)
 
     # Grid
-    buttonsGrid = ButtonsGrid(display, info, app)
+    buttonsGrid = ButtonsGrid(display, info, app, window)
     window.vLayout.addLayout(buttonsGrid)
 
     # Executa a aplicação
