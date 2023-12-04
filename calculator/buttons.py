@@ -68,8 +68,7 @@ class ButtonsGrid(QGridLayout):
 
         if text == 'CLOSE':
             button.setProperty('cssClass', 'closeButton')
-            slot = self._makeSlot(app.quit)
-            self._connectButtonClicked(button, slot)
+            button.clicked.connect(app.quit)
   
         if text == 'C':
             slot = self._makeSlot(self.display.clear)
