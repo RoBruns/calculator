@@ -1,10 +1,17 @@
-from variables_and_styles import (BIG_FONT_SIZE, TEXT_MARGIN, MINIMUN_WIDTH,
-                                  SMALL_FONT_SIZE)
-from PySide6.QtWidgets import QLineEdit, QLabel, QWidget
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QKeyEvent
+from PySide6.QtWidgets import QLabel, QLineEdit, QWidget
+from utils import isEmpty, isNumOrDot
+from variables_and_styles import (BIG_FONT_SIZE, MINIMUN_WIDTH,
+                                  SMALL_FONT_SIZE, TEXT_MARGIN)
 
 
 class Display(QLineEdit):
+    eqPressed = Signal()
+    deletePressed = Signal()
+    clearPressed = Signal()
+    inputPressed = Signal()
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.configStyle()
@@ -17,6 +24,35 @@ class Display(QLineEdit):
         self.setMinimumWidth(MINIMUN_WIDTH)
         self.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.setTextMargins(*margins)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        text = event.text().strip()
+        key = event.key()
+        KEYS = Qt.Key
+
+        isEnter = key in [KEYS.Key_Enter, KEYS.Key_Return]
+        isDelete = key in [KEYS.Key_Backspace, KEYS.Key_Delete]
+        isEsc = key in [KEYS.Key_Escape]
+
+        if isEnter:
+            self.eqPressed.emit()
+            return event.ignore()
+
+        if isDelete:
+            self.deletePressed.emit()
+            return event.ignore()
+
+        if isEsc:
+            self.clearPressed.emit()
+            return event.ignore()
+
+        # Não passa o evento se o texto for vazio
+        if isEmpty(text):
+            return event.ignore()
+
+        if isNumOrDot(text):
+            self.inputPressed.emit()
+            return event.ignore()
 
 
 class Info(QLabel):
