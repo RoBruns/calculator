@@ -32,6 +32,18 @@ qss = f"""
         color: #fff;
         background: {DARKEST_PRIMARY_COLOR};
     }}
+        QPushButton[cssClass="closeButton"] {{
+        color: #fff;
+        background: #f0000f;
+    }}
+    QPushButton[cssClass="closeButton"]:hover {{
+        color: #fff;
+        background: #b3000b;
+    }}
+    QPushButton[cssClass="closeButton"]:pressed {{
+        color: #f0000f;
+        background: #fff;
+    }}
 """
 
 
