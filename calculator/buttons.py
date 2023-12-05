@@ -33,7 +33,7 @@ class ButtonsGrid(QGridLayout):
             ['7', '8', '9', '*'],
             ['4', '5', '6', '-'],
             ['1', '2', '3', '+'],
-            ['CLOSE',  '0', '.', '='],
+            ['N',  '0', '.', '='],
         ]
         self.display = display
         self.info = info
@@ -56,6 +56,7 @@ class ButtonsGrid(QGridLayout):
         self._equation = value
         self.info.setText(value)
 
+    @Slot()
     def _insertKeyTextToDisplay(self, text):
         newDisplayValue = self.display.text() + text
 
@@ -64,6 +65,7 @@ class ButtonsGrid(QGridLayout):
 
         self.display.insert(text)
 
+    @Slot()
     def _operatorKeyClicked(self, text):
         displayText = self.display.text()
         self.display.clear()
@@ -80,7 +82,7 @@ class ButtonsGrid(QGridLayout):
 
     def _makeGrid(self):
         self.display.eqPressed.connect(self._eq)
-        self.display.deletePressed.connect(self.display.backspace)
+        self.display.deletePressed.connect(self._backspace)
         self.display.clearPressed.connect(self._clear)
         self.display.inputPressed.connect(self._insertKeyTextToDisplay)
         self.display.opratorPressed.connect(self._operatorKeyClicked)
@@ -103,12 +105,11 @@ class ButtonsGrid(QGridLayout):
     def _configSpecialButton(self, button, app):
         text = button.text()
 
-        if text == 'CLOSE':
-            button.setProperty('cssClass', 'closeButton')
-            button.clicked.connect(app.quit)
-
         if text == 'C':
             self._connectButtonClicked(button, self._clear)
+
+        if text == 'N':
+            self._connectButtonClicked(button, self._invertNumber)
 
         if text in '/*-+^':
             self._connectButtonClicked(
@@ -122,12 +123,27 @@ class ButtonsGrid(QGridLayout):
         if text == '=':
             self._connectButtonClicked(button, self._eq)
 
+    @Slot(bool)
     def _makeSlot(self, func, *args, **kwargs):
-        @Slot(bool)
         def realSlot(_):
             func(*args, **kwargs)
         return realSlot
 
+    @Slot()
+    def _invertNumber(self):
+        displayText = self.display.text()
+
+        if not isValidNumber(displayText):
+            return
+
+        newNumber = float(displayText) * -1
+
+        if newNumber.is_integer():
+            newNumber = int(newNumber)
+
+        self.display.setText(str(newNumber))
+
+    @Slot()
     def _insertButtonTextToDisplay(self, button):
         buttonText = button.text()
         newDisplayValue = self.display.text() + buttonText
@@ -136,13 +152,16 @@ class ButtonsGrid(QGridLayout):
             return
 
         self.display.insert(buttonText)
+        self.display.setFocus()
 
+    @Slot()
     def _clear(self):
         self._left = None
         self._right = None
         self._op = None
         self.equation = self.equationInitialValue
         self.display.clear()
+        self.display.setFocus()
 
     def _operatorClicked(self, button):
         buttonText = button.text()
@@ -159,6 +178,7 @@ class ButtonsGrid(QGridLayout):
         self._op = buttonText
         self.equation = f'{self._left} {self._op} ???'
 
+    @Slot()
     def _eq(self):
         displayText = self.display.text()
 
@@ -184,9 +204,15 @@ class ButtonsGrid(QGridLayout):
         self.info.setText(f'{self.equation} = {result}')
         self._left = result
         self._right = None
+        self.display.setFocus()
 
         if result == 'error':
             self._left = None
+
+    @Slot()
+    def _backspace(self):
+        self.display.backspace()
+        self.display.setFocus()
 
     def _showError(self, text):
         msgBox = self.window.makeMsgBox()
@@ -201,3 +227,4 @@ class ButtonsGrid(QGridLayout):
         msgBox.setText(text)
         msgBox.setIcon(msgBox.Icon.Information)
         msgBox.exec()
+        self.display.setFocus()
