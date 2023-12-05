@@ -56,11 +56,34 @@ class ButtonsGrid(QGridLayout):
         self._equation = value
         self.info.setText(value)
 
+    def _insertKeyTextToDisplay(self, text):
+        newDisplayValue = self.display.text() + text
+
+        if not isValidNumber(newDisplayValue):
+            return
+
+        self.display.insert(text)
+
+    def _operatorKeyClicked(self, text):
+        displayText = self.display.text()
+        self.display.clear()
+
+        if not isValidNumber(displayText) and self._left is None:
+            self._showError('Digite um número antes de usar um operador')
+            return
+
+        if self._left is None:
+            self._left = float(displayText)
+
+        self._op = text
+        self.equation = f'{self._left} {self._op} ???'
+
     def _makeGrid(self):
         self.display.eqPressed.connect(self._eq)
         self.display.deletePressed.connect(self.display.backspace)
         self.display.clearPressed.connect(self._clear)
-        self.display.inputPressed.connect(self._insertButtonTextToDisplay)
+        self.display.inputPressed.connect(self._insertKeyTextToDisplay)
+        self.display.opratorPressed.connect(self._operatorKeyClicked)
 
         for rowNumber, rowData in enumerate(self._gridmask):
             for colNumber, buttonText in enumerate(rowData):

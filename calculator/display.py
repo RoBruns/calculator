@@ -10,7 +10,8 @@ class Display(QLineEdit):
     eqPressed = Signal()
     deletePressed = Signal()
     clearPressed = Signal()
-    inputPressed = Signal()
+    inputPressed = Signal(str)
+    opratorPressed = Signal(str)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,6 +34,7 @@ class Display(QLineEdit):
         isEnter = key in [KEYS.Key_Enter, KEYS.Key_Return]
         isDelete = key in [KEYS.Key_Backspace, KEYS.Key_Delete]
         isEsc = key in [KEYS.Key_Escape]
+        isOpertor = text in ['+', '-', '*', '/']
 
         if isEnter:
             self.eqPressed.emit()
@@ -46,12 +48,15 @@ class Display(QLineEdit):
             self.clearPressed.emit()
             return event.ignore()
 
+        if isOpertor:
+            self.opratorPressed.emit(text)
+            return event.ignore()
         # Não passa o evento se o texto for vazio
         if isEmpty(text):
             return event.ignore()
 
         if isNumOrDot(text):
-            self.inputPressed.emit()
+            self.inputPressed.emit(text)
             return event.ignore()
 
 
